@@ -34,3 +34,10 @@ export function getTransactions() {
          ORDER BY date DESC`
     )
 }
+
+// Deleting a transaction form transaction list
+export function deleteTransaction(id) {
+    db.runSync(`
+        DELETE FROM transctions 
+        WHERE id = ?`, [id])
+}

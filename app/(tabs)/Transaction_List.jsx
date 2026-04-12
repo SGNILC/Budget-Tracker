@@ -3,13 +3,15 @@
  * @Text displays the text
  * @FlatList to render the list of transactions
  * @StyleSheet allows for style to be defined, similar to CSS
+ * @TouchableOpacity adds reactivity to the specified element
  */
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 /**
  * @getTransactions function to fetch transactions from the database
+ * @deleteTransaction funciton to delete transactions
  */
-import { getTransactions } from "../../db/database";
+import { getTransactions, deleteTransaction } from "../../db/database";
 /**
  * @useFocusEffect rerenders the screen
  * @useCallback prevents infinite loops in the render
@@ -35,7 +37,11 @@ export default function TransactionList() {
         data={transactions}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.row}>
+          <TouchableOpacity style={styles.row}
+          onLongPress={() => {
+            deleteTransaction(item.id);
+            setTransactions(getTransaction());
+          }}>
             <Text style={styles.date}>{item.date}</Text>
             <Text style={styles.description}>{item.description}</Text>
             <Text style={styles.category}>{item.category}</Text>
@@ -48,7 +54,7 @@ export default function TransactionList() {
               {item.type === "expense" ? "-" : "+"} $
               {item.amount.toFixed(2)}{" "}
             </Text>
-          </View>
+          </TouchableOpacity>
         )}
         ListEmptyComponent={
           <Text style={styles.empty}> No transactions yet.</Text>

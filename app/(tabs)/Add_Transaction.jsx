@@ -24,7 +24,10 @@ import { useEffect, useState } from "react";
  * @addTransaction function to add a transaction
  */
 import { addTransaction, initDB } from "../../db/database";
-
+/**
+ * @DateTimePicker component for selecting the date
+ */
+import DateTimePicker from "@react-native-community/datetimepicker";
 // a form that sets the user's transaction information into the respective fields
 
 export default function AddTransaction() {
@@ -33,6 +36,8 @@ export default function AddTransaction() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [type, setType] = useState("expense"); // preset so that the system defaults to only expenses (first) unless the user wants to add an income
+  const [showPicker, setShowPicker] = useState(false);
+  const [pickerDate, setPickerDate] = useState(new Date());
 
   useEffect(() => {
     initDB();
@@ -64,34 +69,6 @@ export default function AddTransaction() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}> Add Transaction</Text>
-
-      {/* Form Inputs */}
-      <TextInput
-        style={styles.input}
-        placeholder="Date (YYYY-MM-DD)"
-        value={date}
-        onChangeText={setDate}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Amount"
-        value={amount}
-        onChangeText={setAmount}
-        keyboardType="decimal-pad"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Category (e.g., Food, Rent, Other)"
-        value={category}
-        onChangeText={setCategory}
-      />
-
       {/* Radio Buttons */}
       <View style={styles.typeRow}>
         <TouchableOpacity
@@ -108,6 +85,50 @@ export default function AddTransaction() {
         </TouchableOpacity>
       </View>
 
+      <TextInput
+        style={styles.input}
+        placeholder="Amount"
+        placeholderTextColor="#999"
+        value={amount}
+        onChangeText={setAmount}
+        keyboardType="decimal-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        placeholderTextColor="#999"
+        value={description}
+        onChangeText={setDescription}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Category (e.g., Food, Rent, Other)"
+        placeholderTextColor="#999"
+        value={category}
+        onChangeText={setCategory}
+      />
+      {/* Date Picker "field" */}
+      <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
+        <Text style={{ color: date ? 'black' : '#999' }}>
+          {date || 'YYYY-MM-DD'}
+        </Text>
+      </TouchableOpacity>
+      {showPicker && (
+        <DateTimePicker
+          value={pickerDate}
+          mode="date"
+          display="default"
+          onChange={(event, selectedDate) => {
+            setShowPicker(false);
+            if (selectedDate) {
+              setPickerDate(selectedDate);
+              // Convert to YYYY-MM-DD string
+              const iso = selectedDate.toISOString().split('T')[0];
+              setDate(iso);
+            }
+          }}
+        />
+      )}
       {/* Button to Save Work */}
       <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
         <Text style={styles.saveText}>Save</Text>
@@ -128,9 +149,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
+    backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
+    color: "black",
     padding: 10,
     marginBottom: 12,
   },
