@@ -28,6 +28,7 @@ import { addTransaction, initDB } from "../../db/database";
  * @DateTimePicker component for selecting the date
  */
 import DateTimePicker from "@react-native-community/datetimepicker";
+
 // a form that sets the user's transaction information into the respective fields
 
 export default function AddTransaction() {
@@ -122,7 +123,6 @@ export default function AddTransaction() {
             setShowPicker(false);
             if (selectedDate) {
               setPickerDate(selectedDate);
-              // Convert to YYYY-MM-DD string
               const iso = selectedDate.toISOString().split('T')[0];
               setDate(iso);
             }

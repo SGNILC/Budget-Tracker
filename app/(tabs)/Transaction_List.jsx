@@ -40,7 +40,7 @@ export default function TransactionList() {
           <TouchableOpacity style={styles.row}
           onLongPress={() => {
             deleteTransaction(item.id);
-            setTransactions(getTransaction());
+            setTransactions(getTransactions());
           }}>
             <Text style={styles.date}>{item.date}</Text>
             <Text style={styles.description}>{item.description}</Text>
