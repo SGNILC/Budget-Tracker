@@ -38,6 +38,6 @@ export function getTransactions() {
 // Deleting a transaction form transaction list
 export function deleteTransaction(id) {
     db.runSync(`
-        DELETE FROM transctions 
+        DELETE FROM transactions 
         WHERE id = ?`, [id])
 }
