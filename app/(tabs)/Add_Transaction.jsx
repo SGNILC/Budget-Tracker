@@ -144,9 +144,11 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   title: {
+    color: "white",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center"
   },
   input: {
     backgroundColor: "white",

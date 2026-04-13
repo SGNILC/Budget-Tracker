@@ -35,6 +35,16 @@ export function getTransactions() {
     )
 }
 
+// Returns transactions between two months (inclusive), e.g. '2026-01' to '2026-04'
+export function getTransactionsByRange(fromYYYYMM, toYYYYMM) {
+    return db.getAllSync(
+        `SELECT * FROM transactions
+         WHERE substr(date, 1, 7) >= ? AND substr(date, 1, 7) <= ?
+         ORDER BY date ASC`,
+        [fromYYYYMM, toYYYYMM]
+    );
+}
+
 // Deleting a transaction form transaction list
 export function deleteTransaction(id) {
     db.runSync(`

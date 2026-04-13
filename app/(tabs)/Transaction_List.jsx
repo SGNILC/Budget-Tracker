@@ -5,13 +5,13 @@
  * @StyleSheet allows for style to be defined, similar to CSS
  * @TouchableOpacity adds reactivity to the specified element
  */
-import { FlatList, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 /**
  * @getTransactions function to fetch transactions from the database
  * @deleteTransaction funciton to delete transactions
  */
-import { getTransactions, deleteTransaction } from "../../db/database";
+import { deleteTransaction, getTransactions } from "../../db/database";
 /**
  * @useFocusEffect rerenders the screen
  * @useCallback prevents infinite loops in the render
@@ -71,9 +71,11 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   title: {
+    color: "white",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center"
   },
   row: {
     padding: 12,
