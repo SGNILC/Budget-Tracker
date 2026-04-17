@@ -1,8 +1,8 @@
-import { StyleSheet, Text, Alert, TouchableOpacity, View, Platform } from "react-native";
-import { useState } from "react";
-import { getTransactionsByRange } from "../../db/database";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Sharing from 'expo-sharing';
+import { useState } from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { getTransactionsByRange } from "../../db/database";
 // We import the legacy API specifically to avoid SDK 54 object errors
 import * as FileSystem from 'expo-file-system/legacy';
 
@@ -37,7 +37,7 @@ export default function Export() {
             }
 
             // Build CSV
-            const csv = "Date,Amount,Description\n" + 
+            const csv = "Date,Amount,Description,Category,Transaction Type\n" + 
                         transactions.map(t => `${t.date},${t.amount},${t.description},${t.category},${t.type}`).join("\n");
 
             const fileName = `transactions_${fromYYYYMM}.csv`;
