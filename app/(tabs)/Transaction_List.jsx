@@ -42,19 +42,18 @@ export default function TransactionList() {
             deleteTransaction(item.id);
             setTransactions(getTransactions());
           }}>
-            <Text style={styles.date}>{item.date}</Text>
-            <Text style={styles.description}>{item.description}</Text>
-            <Text style={styles.category}>{item.category}</Text>
-            <Text
-              style={[
-                styles.amount,
-                item.type == "expense" ? styles.expense : styles.income,
-              ]}
-            >
-              {item.type === "expense" ? "-" : "+"} $
-              {item.amount.toFixed(2)}{" "}
-            </Text>
-          </TouchableOpacity>
+          <Text style={styles.date}>{item.date}</Text>
+          <Text style={styles.description}>{item.description}</Text>
+          <Text style={styles.category}>{item.category}</Text>
+          <Text
+            style={[
+              styles.amount,
+              item.type == "expense" ? styles.expense : styles.income,
+            ]}
+          >
+            {item.type === "expense" ? "-" : "+"} ${item.amount.toFixed(2)}
+          </Text>
+        </TouchableOpacity>
         )}
         ListEmptyComponent={
           <Text style={styles.empty}> No transactions yet.</Text>
@@ -69,46 +68,63 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     paddingTop: 60,
+    backgroundColor: "#00D09E", // light gray background
   },
   title: {
-    color: "white",
+    color: "#FFFFFF",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center"
   },
   row: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
-    marginBottom: 4,
+    backgroundColor: "#F1FFF3",
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2, // Android shadow
   },
   date: {
-    fontSize: 12,
+    flex: 1.2,
     color: "#888",
+    fontSize: 13,
   },
   description: {
-    fontSize: 16,
-    fontWeight: "500",
+    flex: 2,
+    color: "#222",
+    fontWeight: "bold",
+    fontSize: 15,
+    marginLeft: 8,
   },
   category: {
-    fontSize: 12,
-    color: "#666",
+    flex: 1.5,
+    color: "#2196F3",
+    fontSize: 13,
+    marginLeft: 8,
   },
   amount: {
-    fontSize: 16,
+    flex: 1,
     fontWeight: "bold",
-    marginTop: 4,
+    fontSize: 16,
+    textAlign: "right",
+    marginLeft: 8,
   },
   expense: {
-    color: "red",
+    color: "#F44336",
   },
   income: {
-    color: "green",
+    color: "#4CAF50",
   },
   empty: {
+    color: "#888",
     textAlign: "center",
-    color: "#aaa",
     marginTop: 40,
+    fontSize: 16,
   },
 });

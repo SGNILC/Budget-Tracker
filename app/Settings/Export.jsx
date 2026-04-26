@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getTransactionsByRange } from "../../db/database";
 // We import the legacy API specifically to avoid SDK 54 object errors
+// Switch to File/Directory API when Expo docs and support are more stable.
+
 import * as FileSystem from 'expo-file-system/legacy';
 
 export default function Export() {

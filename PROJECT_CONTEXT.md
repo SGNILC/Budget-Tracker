@@ -36,16 +36,15 @@ Month Number | Date | Amount | Transaction Name | Category of Transaction
 
 ## Phased Roadmap
 
-| Phase | Status | Goal |
-|---|---|---|
-| 1 | ✅ Complete | Manual entry → SQLite → transaction list view |
-| 1 (improvements) | 🔄 In progress | Better date input, delete transaction |
-| 2 | Not started | Export to .xlsx matching the Excel template |
-| 2.5 | Not started | UI polish (Figma-informed design) |
-| 3 | Not started | Camera → OCR → parse receipt → confirm & save (ML Kit, offline) |
-| 4 | Not started | Dashboard with charts and category breakdowns |
-| 5 | Not started | Backup + optional sync to laptop |
-
+| Phase              | Status        | Goal                                                                 |
+|--------------------|--------------|----------------------------------------------------------------------|
+| 1                  | ✅ Complete   | Manual entry → SQLite → transaction list view                        |
+| 1 (improvements)   | ✅ Complete   | Better date input, delete transaction                                |
+| 2                  | ✅ Complete   | Export to CSV (Excel-compatible) via Settings                        |
+| 2.5                | Not started  | UI polish (Figma-informed design, improved UX)                       |
+| 3                  | Not started  | Camera → OCR → parse receipt → confirm & save (ML Kit, offline)      |
+| 4                  | Not started  | Dashboard with charts and category breakdowns                        |
+| 5                  | Not started  | Backup + optional sync to laptop                                     |
 ---
 
 ## Environment
