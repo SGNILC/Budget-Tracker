@@ -2,14 +2,16 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useEffect, useState } from "react";
 import {
-  ScrollView, // Added for scrollability
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from "react-native";
+import IncomeExpenseToggle from "../../components/ui/Income_Expense_toggle";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/button";
 import { addTransaction, initDB } from "../../db/database"; //
 
 export default function AddTransaction() {
@@ -32,9 +34,16 @@ export default function AddTransaction() {
     }
     // Logic from db/database.js
     addTransaction(date, parseFloat(amount), description, category, type);
-    
     // Reset state after save
-    setDate(""); setAmount(""); setDescription(""); setCategory(""); setType("expense");
+    handleCancel();
+  }
+
+  function handleCancel() {
+    setDate("");
+    setAmount("");
+    setDescription("");
+    setCategory("");
+    setType("expense");
   }
 
   return (
@@ -48,61 +57,36 @@ export default function AddTransaction() {
       
       <Text style={styles.title}>Add Transaction</Text>
 
-      {/* Scan Receipt Card */}
+{/* Scan Receipt Card */}
       <TouchableOpacity style={styles.receiptContainer}>
-        
         <View style={styles.receiptInner}>
           <Ionicons name="camera-outline" size={40} color="#555" />
           <Text style={styles.receiptText}>Scan Receipt</Text>
         </View>
       </TouchableOpacity>
+     
 
       {/* Income / Expense Toggle */}
-      <View style={styles.typeRow}>
-        <TouchableOpacity
-          style={[styles.typeButton, type === "income" && styles.incomeActive]}
-          onPress={() => setType("income")}
-        >
-          <Text style={[styles.typeText, type === "income" && styles.activeText]}>
-            <Text style={{fontSize: 18, color:'green'}}>↗</Text> Income
-          </Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[styles.typeButton, type === "expense" && styles.expenseActive]}
-          onPress={() => setType("expense")}
-        >
-          <Text style={[styles.typeText, type === "expense" && styles.activeText]}>
-            <Text style={{fontSize: 18, color: 'red'}}>↘</Text> Expense
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <IncomeExpenseToggle value={type} onChange={setType} />
 
       {/* Input Fields */}
       <View style={styles.form}>
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Amount"
-          placeholderTextColor="#999"
           value={amount}
           onChangeText={setAmount}
           keyboardType="decimal-pad"
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Description"
-          placeholderTextColor="#999"
           value={description}
           onChangeText={setDescription}
         />
-        <TextInput
-          style={styles.input}
+        <Input
           placeholder="Category"
-          placeholderTextColor="#999"
           value={category}
           onChangeText={setCategory}
         />
-        
         <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
           <Text style={{ color: date ? 'black' : '#999' }}>
             {date || 'YYYY-MM-DD'}
@@ -112,13 +96,10 @@ export default function AddTransaction() {
 
       {/* Action Row */}
       <View style={styles.actionRow}>
-        <TouchableOpacity style={styles.cancelButton}>
-          <Text style={styles.cancelText}>Cancel</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-          <Text style={styles.saveText}>Save</Text>
-        </TouchableOpacity>
+        <Button title="Cancel" onPress={handleCancel}
+          style={styles.cancelButton} textStyle={styles.cancelText}/>
+        <Button title="Save" onPress={handleSubmit}
+          style={styles.saveButton} textStyle={styles.saveText}/>
       </View>
 
       {showPicker && (
@@ -141,14 +122,21 @@ export default function AddTransaction() {
 }
 
 const styles = StyleSheet.create({
+  absoluteBlur: {
+    ...StyleSheet.absoluteFillObject, // Makes blur cover the whole container
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    overflow: 'hidden',
+  },
   container: {
     flex: 1,
     backgroundColor: "#00D094", // Main Teal
   },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingTop: 60, // Pushes the content down from the time/battery bar
-    paddingBottom: 40, // Ensures extra space at the bottom when scrolling
+    paddingTop: 60,
+    paddingBottom: 40,
   },
   title: {
     color: "white",
@@ -223,18 +211,20 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 15,
     alignItems: "center",
+    marginVertical: 0,
   },
   cancelText: {
-    color: "#0000000",
+    color: "#000000",
     fontWeight: "600",
     fontSize: 16,
   },
   saveButton: {
     flex: 1,
-    backgroundColor: "#FF9F1C", // Orange
+    backgroundColor: "#FF9F1C",
     padding: 16,
     borderRadius: 15,
     alignItems: "center",
+    marginVertical: 0,
   },
   saveText: {
     color: "white",

@@ -1,26 +1,10 @@
-/**
- * @View used to group elements (similar to div)
- * @Text displays the text
- * @FlatList to render the list of transactions
- * @StyleSheet allows for style to be defined, similar to CSS
- * @TouchableOpacity adds reactivity to the specified element
- */
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-/**
- * @getTransactions function to fetch transactions from the database
- * @deleteTransaction funciton to delete transactions
- */
-import { deleteTransaction, getTransactions } from "../../db/database";
-/**
- * @useFocusEffect rerenders the screen
- * @useCallback prevents infinite loops in the render
- * 
- */
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import Card from "../../components/ui/Card";
+import { colors, fontSizes, spacing } from "../../constants/themes";
+import { deleteTransaction, getTransactions } from "../../db/database";
 
-// rendering the screen
 export default function TransactionList() {
   const [transactions, setTransactions] = useState([]);
 
@@ -29,34 +13,47 @@ export default function TransactionList() {
       setTransactions(getTransactions());
     }, []),
   );
-  // the rendered list
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> Transactions</Text>
+      <Text style={styles.title}>Transactions</Text>
+      
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false} // Cleaner look
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.row}
-          onLongPress={() => {
-            deleteTransaction(item.id);
-            setTransactions(getTransactions());
-          }}>
-          <Text style={styles.date}>{item.date}</Text>
-          <Text style={styles.description}>{item.description}</Text>
-          <Text style={styles.category}>{item.category}</Text>
-          <Text
-            style={[
-              styles.amount,
-              item.type == "expense" ? styles.expense : styles.income,
-            ]}
-          >
-            {item.type === "expense" ? "-" : "+"} ${item.amount.toFixed(2)}
-          </Text>
-        </TouchableOpacity>
+          <Card style={styles.cardOverride}>
+            <TouchableOpacity
+              style={styles.rowContent}
+              onLongPress={() => {
+                deleteTransaction(item.id);
+                setTransactions(getTransactions());
+              }}
+            >
+              {/* Left Column: Description and Date */}
+              <View style={styles.leftColumn}>
+                <Text style={styles.description}>{item.description}</Text>
+                <Text style={styles.date}>{item.date}</Text>
+              </View>
+
+              {/* Right Column: Category and Amount */}
+              <View style={styles.rightColumn}>
+                <Text style={styles.category}>{item.category}</Text>
+                <Text
+                  style={[
+                    styles.amount,
+                    item.type === "expense" ? styles.expenseText : styles.incomeText,
+                  ]}
+                >
+                  {item.type === "expense" ? "-" : "+"} ${item.amount.toFixed(2)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </Card>
         )}
         ListEmptyComponent={
-          <Text style={styles.empty}> No transactions yet.</Text>
+          <Text style={styles.empty}>No transactions yet.</Text>
         }
       />
     </View>
@@ -66,65 +63,66 @@ export default function TransactionList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 60,
-    backgroundColor: "#00D09E", // light gray background
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.statusBarHeight, // Uses the 60px buffer we added to theme
+    backgroundColor: colors.primary, // THE VIBRANT TEAL
   },
   title: {
-    color: "#FFFFFF",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center"
+    color: "white",
+    fontSize: 30,
+    fontWeight: "700",
+    marginBottom: 15,
+    textAlign: "center",
   },
-  row: {
-    backgroundColor: "#F1FFF3",
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 14,
+  cardOverride: {
+    // Overriding Card.jsx defaults if needed, but Card.jsx already has 30px radius
+    marginBottom: 12,
+    padding: 18,
+  },
+  rowContent: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2, // Android shadow
   },
-  date: {
-    flex: 1.2,
-    color: "#888",
-    fontSize: 13,
+  leftColumn: {
+    flex: 2,
+  },
+  rightColumn: {
+    flex: 1,
+    alignItems: "flex-end",
   },
   description: {
-    flex: 2,
-    color: "#222",
-    fontWeight: "bold",
-    fontSize: 15,
-    marginLeft: 8,
+    color: colors.textDark,
+    fontWeight: "700",
+    fontSize: 16,
+    marginBottom: 4,
+  },
+  date: {
+    color: colors.textSecondary,
+    fontSize: 13,
   },
   category: {
-    flex: 1.5,
-    color: "#2196F3",
-    fontSize: 13,
-    marginLeft: 8,
+    color: colors.activeBlue, // Blue from your design
+    fontSize: 12,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    marginBottom: 4,
   },
   amount: {
-    flex: 1,
-    fontWeight: "bold",
+    fontWeight: "800",
     fontSize: 16,
-    textAlign: "right",
-    marginLeft: 8,
   },
-  expense: {
-    color: "#F44336",
+  expenseText: {
+    color: colors.expense, // The vibrant red from theme
   },
-  income: {
-    color: "#4CAF50",
+  incomeText: {
+    color: colors.income, // The vibrant green/teal from theme
   },
   empty: {
-    color: "#888",
+    color: colors.white,
     textAlign: "center",
-    marginTop: 40,
-    fontSize: 16,
+    marginTop: 50,
+    fontSize: fontSizes.regular,
+    opacity: 0.8,
   },
 });

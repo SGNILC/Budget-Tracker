@@ -9,6 +9,9 @@ import { router } from "expo-router";
  * @View used to group elements (similar to div)
  */
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { colors, spacing, fontSizes } from "../../constants/themes";
+import Button from "../../components/ui/button";
+
 
 export default function Settings() {
   return (
