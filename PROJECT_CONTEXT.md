@@ -36,15 +36,15 @@ Month Number | Date | Amount | Transaction Name | Category of Transaction
 
 ## Phased Roadmap
 
-| Phase              | Status        | Goal                                                                 |
-|--------------------|--------------|----------------------------------------------------------------------|
-| 1                  | ✅ Complete   | Manual entry → SQLite → transaction list view                        |
-| 1 (improvements)   | ✅ Complete   | Better date input, delete transaction                                |
-| 2                  | ✅ Complete   | Export to CSV (Excel-compatible) via Settings                        |
-| 2.5                | Not started  | UI polish (Figma-informed design, improved UX)                       |
-| 3                  | Not started  | Camera → OCR → parse receipt → confirm & save (ML Kit, offline)      |
-| 4                  | Not started  | Dashboard with charts and category breakdowns                        |
-| 5                  | Not started  | Backup + optional sync to laptop                                     |
+| Phase              | Status           | Goal                                                                 |
+|--------------------|-----------------|----------------------------------------------------------------------|
+| 1                  | ✅ Complete      | Manual entry → SQLite → transaction list view                        |
+| 1 (improvements)   | ✅ Complete      | Better date input, delete transaction                                |
+| 2                  | ✅ Complete      | Export to CSV (Excel-compatible) via Settings                        |
+| 2.5                | ✅ Complete      | UI polish — reusable components (Button, Card, Input, I_E toggle), centralized theme, refactored screens |
+| 3                  | Not started      | Camera → OCR → parse receipt → confirm & save (ML Kit, offline)      |
+| 4                  | Not started      | Dashboard with charts and category breakdowns                        |
+| 5                  | Not started      | Backup + optional sync to laptop                                     |
 ---
 
 ## Environment
@@ -101,22 +101,44 @@ export function getTransactions() {
 
 ---
 
-## Bugs Fixed So Far
-
-| Bug | Cause | Fix |
-|---|---|---|
-| `openDatabaseAsync` returned a Promise, not a db object | API mismatch | Switched to `openDatabaseSync` |
-| `tsconfig.json` corrupted | Malformed entries left over from file renames | Removed invalid `include` array entries |
-| `useFocusEffect` error: "passed second argument" | `React.useCallback` used without importing React; trailing comma | Import `useCallback` from `'react'` directly |
-| Transaction list didn't update after adding | `useEffect` only runs once on mount | Replaced with `useFocusEffect` from `expo-router` |
-| Git push rejected: master vs main branch | GitHub created `main`; local was `master` | `git branch -m master main` + `--allow-unrelated-histories` pull |
-| TextInput invisible on Android | Default background transparent on some Android versions | Added `backgroundColor: 'white'`, `color: 'black'`, `placeholderTextColor="#999"` |
-
 ---
 
 ## Where We Left Off
 
 Phase 1 core is complete and tested end-to-end on a physical Android device.
+
+---
+
+## Working Application — Version 1 Status
+
+> **Version 1 is feature-complete and functional on Android.**
+
+| Feature                          | Status        |
+|----------------------------------|--------------|
+| Add transaction (amount, desc, category, date, type) | ✅ Done |
+| Income / Expense toggle          | ✅ Done       |
+| SQLite local storage             | ✅ Done       |
+| Transaction list (newest first)  | ✅ Done       |
+| Long-press to delete             | ✅ Done       |
+| Export to CSV (Settings tab)     | ✅ Done       |
+| Reusable component library       | ✅ Done       |
+| Centralized theme                | ✅ Done       |
+| Cancel clears form               | ✅ Done       |
+| Tab navigation (3 tabs)         | ✅ Done       |
+
+---
+
+## Skills Learned (May 2, 2026)
+
+| Category | Skills |
+|---|---|
+| Frameworks & Libraries | React Native, Expo, Expo Router, expo-sqlite, expo-file-system |
+| Languages | JavaScript (JSX), TypeScript (config/types) |
+| UI Development | Reusable component architecture (Button, Card, Input, Toggle), centralized theming, StyleSheet composition, style prop merging |
+| State Management | React `useState`, form reset patterns, `useFocusEffect` + `useCallback` for data refresh |
+| Database | SQLite local storage with `expo-sqlite` (sync API), parameterized queries |
+| DevOps & Tooling | Expo CLI, npm, PowerShell execution policy management, Git (branch renaming, remote setup) |
+| Debugging | Import path resolution, Expo config plugin requirements, `app.json` plugin configuration |
 
 **Completed:**
 - ✅ `db/database.js` — full database layer
