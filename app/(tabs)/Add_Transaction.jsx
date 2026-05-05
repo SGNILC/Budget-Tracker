@@ -13,6 +13,8 @@ import IncomeExpenseToggle from "../../components/ui/Income_Expense_toggle";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { addTransaction, initDB } from "../../db/database"; //
+import { useRouter } from "expo-router";
+// import { useRouter } from '@react-navigation/native';
 
 export default function AddTransaction() {
   const [date, setDate] = useState(""); 
@@ -22,6 +24,8 @@ export default function AddTransaction() {
   const [type, setType] = useState("expense"); 
   const [showPicker, setShowPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState(new Date());
+  const router = useRouter();
+
 
   useEffect(() => {
     initDB(); //
@@ -58,7 +62,9 @@ export default function AddTransaction() {
       <Text style={styles.title}>Add Transaction</Text>
 
 {/* Scan Receipt Card */}
-      <TouchableOpacity style={styles.receiptContainer}>
+      <TouchableOpacity style={styles.receiptContainer} onPress={() => {
+        router.push("/modal/camera")
+      }}>
         <View style={styles.receiptInner}>
           <Ionicons name="camera-outline" size={40} color="#555" />
           <Text style={styles.receiptText}>Scan Receipt</Text>

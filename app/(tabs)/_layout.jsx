@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons'; // Using Ionicons for better cros
 import { Tabs } from 'expo-router';
 import { Platform } from 'react-native';
 import { colors } from '../../constants/themes';
+import { Stack } from "expo-router";
 
 export default function TabLayout() {
   return (
@@ -72,6 +73,15 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+      name="app\modal\camera.jsx"  
+      options={{
+        href: null,  
+        headerShown: false,
+      }}
+    />
     </Tabs>
+    
   );
 }
