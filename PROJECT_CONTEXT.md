@@ -42,7 +42,7 @@ Month Number | Date | Amount | Transaction Name | Category of Transaction
 | 1 (improvements)   | ✅ Complete      | Better date input, delete transaction                                |
 | 2                  | ✅ Complete      | Export to CSV (Excel-compatible) via Settings                        |
 | 2.5                | ✅ Complete      | UI polish — reusable components (Button, Card, Input, I_E toggle), centralized theme, refactored screens |
-| 3                  | Not started      | Camera → OCR → parse receipt → confirm & save (ML Kit, offline)      |
+| 3                  | 🔄 In Progress   | Camera → OCR (Veryfi) → parse receipt → pre-fill Add Transaction form |
 | 4                  | Not started      | Dashboard with charts and category breakdowns                        |
 | 5                  | Not started      | Backup + optional sync to laptop                                     |
 ---
@@ -153,6 +153,76 @@ Phase 1 core is complete and tested end-to-end on a physical Android device.
 2. Add delete transaction (long press on row → `deleteTransaction(id)` in `database.js`)
 
 **Then Phase 2:** Export transactions to `.xlsx` matching the Excel template columns.
+
+---
+
+---
+
+## Phase 3 — Receipt Scanning
+
+### Design Decisions
+
+| Decision | Choice | Reason |
+|---|---|---|
+| OCR Engine | Veryfi API | Purpose-built for receipts, SOC 2 certified, data deleted after processing, free tier (~100 scans/month) |
+| Privacy | Cloud (Veryfi) over on-device (ML Kit) | Better accuracy; Veryfi's data deletion policy satisfies privacy requirement |
+| Camera component | `CameraView` from `expo-camera` | `Camera` component was deprecated in expo-camera v14+ (SDK 52+) |
+| Photo handoff | `router.replace()` with `encodeURIComponent()` query param | Passes photo URI from camera modal back to Add Transaction screen |
+| Modal navigation | Expo Router modal at `app/modal/camera.jsx` | Slides up over current screen; dismissed on close or after Use Photo |
+| Confirmation UX | Pre-fill existing Add Transaction form | No new screen needed; user edits parsed fields and saves normally |
+| Failure handling | Retry first, then fall back to manual entry | Best UX — never lose the user's intent |
+
+### Phase 3 Progress
+
+| Step | Status | Notes |
+|---|---|---|
+| **Phase A: Camera** | | |
+| Install expo-camera | ✅ Done | |
+| Add CAMERA permission to app.json | ✅ Done | |
+| Wire Scan Receipt card to open modal | ✅ Done | `router.push("/modal/camera")` in Add_Transaction.jsx |
+| Create `app/modal/camera.jsx` | ✅ Done | |
+| Camera renders with shutter + close | ✅ Done | Uses `CameraView`, `facing="back"` |
+| Photo preview with Retake / Use Photo | ✅ Done | |
+| Use Photo navigates back with URI | ✅ Done | `router.replace("...?photo=...")` |
+| **Phase B: Veryfi Integration** | | |
+| Sign up for Veryfi, get API credentials | ⏳ Pending | Need Client ID, Username, API Key |
+| Store credentials in app.json extra | ⏳ Pending | |
+| Create `constants/veryfi.js` | ⏳ Pending | |
+| POST photo to Veryfi, receive JSON | ⏳ Pending | |
+| **Phase C: Receipt Parser** | | |
+| Create `utils/parseVeryfiResponse.js` | ⏳ Pending | |
+| Merchant → category lookup table | ⏳ Pending | |
+| **Phase D: Pre-fill Form** | | |
+| Read photo param in Add_Transaction | ⏳ Pending | `useLocalSearchParams()` |
+| Seed form state from parsed result | ⏳ Pending | |
+| **Phase E: Error Handling** | | |
+| Retry / fall back to manual dialog | ⏳ Pending | |
+
+### New Files Added (Phase 3)
+
+```
+app/modal/
+  camera.jsx           ← Fullscreen camera modal: capture, preview, send
+```
+
+### Files Modified (Phase 3)
+
+```
+app/(tabs)/Add_Transaction.jsx  ← Scan Receipt card now opens camera modal
+app.json                        ← Added expo-camera plugin + CAMERA permission
+```
+
+---
+
+## Skills Learned (May 6, 2026)
+
+| Category | Skills |
+|---|---|
+| Camera & Media | expo-camera `CameraView`, camera permissions, capturing photos with `takePictureAsync()`, photo preview with `Image` |
+| Navigation | Expo Router modal navigation, passing data between screens via route params, `encodeURIComponent()` for safe URL encoding |
+| API Design | REST API integration planning, API key security (storing in app.json `extra`), evaluating OCR providers |
+| Debugging | `Camera.Constants` deprecation in expo-camera v14+, duplicate import conflicts, `router.back()` limitations |
+| Concepts | `===` strict equality, `await`/`async`, `useState` vs plain variable assignment, self-closing JSX tags |
 
 ---
 
