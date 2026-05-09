@@ -1,8 +1,10 @@
 import { Camera, CameraView } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, spacing } from "../../constants/themes";
+import { parseVeryfiResponse } from '../../utils/parseVeryfiResponse';
+import { scanReceiptWithVeryfi } from '../../utils/veryfiService';
 // ... other imports
 
 export default function CameraModal() {
@@ -13,6 +15,46 @@ export default function CameraModal() {
     const cameraRef = useRef(null);
     const router = useRouter();
     const fadeAnim = useRef(new Animated.Value(0)).current; // For the blend effect
+    const [isUploading, setIsUploading] = useState(false) // checks if the receipt has been uploaded to the veryfi system
+
+    async function handleUsePhoto() {
+           setIsUploading(true)
+
+           try {
+            // const result = await scanReceiptWithVeryfi(photo.uri);
+            // const parsedResults =  parseVeryfiResponse(result);
+            // if (!parsedResults) throw new Error('Could not read receipt. Please try again or enter manually.');
+console.log("Photo object:", JSON.stringify(photo));
+            console.log("Step 1: starting scan...");
+    const result = await scanReceiptWithVeryfi(photo.uri);
+    console.log("Step 2: Veryfi response:", JSON.stringify(result));
+    const parsedResults = parseVeryfiResponse(result);
+    console.log("Step 3: parsed:", JSON.stringify(parsedResults));
+    if (!parsedResults) throw new Error("Could not parse receipt");
+             router.replace(
+                `/(tabs)/Add_Transaction?amount=${encodeURIComponent(parsedResults.amount)}&date=${encodeURIComponent(parsedResults.date)}&description=${encodeURIComponent(parsedResults.description)}&category=${encodeURIComponent(parsedResults.category)}`
+            );
+            
+           } catch (error) {
+            console.log("Scan error:", error.message)
+            Alert.alert(
+                "Scan Failed",
+                "We couldn't read your receipt. Please retake the photo or enter details manually.",
+                [
+                    {text: "Enter Manually", onPress: () => {
+                        router.replace('/(tabs)/Add_Transaction')
+                    }},
+                    {text: "Retake", onPress: () => {
+                        setPhoto(null)
+                    }}
+                ]
+            )
+
+           } finally {
+            setIsUploading(false);
+           }
+
+        };
 
     useEffect(() => {
         (async () => {
@@ -43,17 +85,21 @@ export default function CameraModal() {
                 
                 <Image source={{ uri: photo.uri }} style={styles.preview} />
                 
+                {isUploading ? (
+                    <ActivityIndicator size="large" color={colors.white}/>
+                ) : (
                 <View style={styles.buttonRow}>
                     <TouchableOpacity style={styles.actionButton} onPress={() => setPhoto(null)}>
                         <Text style={styles.actionButtonText}>Retake</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={[styles.actionButton, styles.confirmButton]} 
-                        onPress={() => router.replace(`/(tabs)/Add_Transaction?photo=${encodeURIComponent(photo.uri)}`)}
+                        onPress={handleUsePhoto}
                     >
                         <Text style={[styles.actionButtonText, styles.confirmButtonText]}>Use Photo</Text>
                     </TouchableOpacity>
-                </View>
+                </View>)}
+                
             </View>
         );
     }

@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# Environment variables — contains API secrets, never commit
+.env
+.env*.local
+
 # Expo
 .expo/
 dist/

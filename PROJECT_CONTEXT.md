@@ -101,33 +101,6 @@ export function getTransactions() {
 
 ---
 
----
-
-## Where We Left Off
-
-Phase 1 core is complete and tested end-to-end on a physical Android device.
-
----
-
-## Working Application — Version 1 Status
-
-> **Version 1 is feature-complete and functional on Android.**
-
-| Feature                          | Status        |
-|----------------------------------|--------------|
-| Add transaction (amount, desc, category, date, type) | ✅ Done |
-| Income / Expense toggle          | ✅ Done       |
-| SQLite local storage             | ✅ Done       |
-| Transaction list (newest first)  | ✅ Done       |
-| Long-press to delete             | ✅ Done       |
-| Export to CSV (Settings tab)     | ✅ Done       |
-| Reusable component library       | ✅ Done       |
-| Centralized theme                | ✅ Done       |
-| Cancel clears form               | ✅ Done       |
-| Tab navigation (3 tabs)         | ✅ Done       |
-
----
-
 ## Skills Learned (May 2, 2026)
 
 | Category | Skills |
@@ -139,22 +112,6 @@ Phase 1 core is complete and tested end-to-end on a physical Android device.
 | Database | SQLite local storage with `expo-sqlite` (sync API), parameterized queries |
 | DevOps & Tooling | Expo CLI, npm, PowerShell execution policy management, Git (branch renaming, remote setup) |
 | Debugging | Import path resolution, Expo config plugin requirements, `app.json` plugin configuration |
-
-**Completed:**
-- ✅ `db/database.js` — full database layer
-- ✅ `Add_Transaction.jsx` — form with validation and input visibility fix
-- ✅ `Transaction_List.jsx` — live-updating list with color-coded amounts
-- ✅ `_layout.jsx` — tab navigation
-- ✅ App tested end-to-end on physical Android device via Expo Go
-- ✅ Code pushed to GitHub (`main` branch)
-
-**Next steps (Phase 1 improvements):**
-1. Replace Date `TextInput` with a proper date picker (`@react-native-community/datetimepicker`)
-2. Add delete transaction (long press on row → `deleteTransaction(id)` in `database.js`)
-
-**Then Phase 2:** Export transactions to `.xlsx` matching the Excel template columns.
-
----
 
 ---
 
@@ -185,18 +142,18 @@ Phase 1 core is complete and tested end-to-end on a physical Android device.
 | Photo preview with Retake / Use Photo | ✅ Done | |
 | Use Photo navigates back with URI | ✅ Done | `router.replace("...?photo=...")` |
 | **Phase B: Veryfi Integration** | | |
-| Sign up for Veryfi, get API credentials | ⏳ Pending | Need Client ID, Username, API Key |
-| Store credentials in app.json extra | ⏳ Pending | |
-| Create `constants/veryfi.js` | ⏳ Pending | |
-| POST photo to Veryfi, receive JSON | ⏳ Pending | |
+| Sign up for Veryfi, get API credentials | ✅ Done | |
+| Store credentials in `.env` + `app.config.js` + `expo-constants` | ✅ Done | |
+| Create `constants/veryfi.js` | ✅ Done | |
+| POST photo to Veryfi, receive JSON | ✅ Done | base64 via `expo-file-system/legacy` |
 | **Phase C: Receipt Parser** | | |
-| Create `utils/parseVeryfiResponse.js` | ⏳ Pending | |
-| Merchant → category lookup table | ⏳ Pending | |
+| Create `utils/parseVeryfiResponse.js` | ✅ Done | |
+| Merchant → category lookup table | ✅ Done | |
 | **Phase D: Pre-fill Form** | | |
-| Read photo param in Add_Transaction | ⏳ Pending | `useLocalSearchParams()` |
-| Seed form state from parsed result | ⏳ Pending | |
+| Read params in Add_Transaction | ✅ Done | `useLocalSearchParams()` |
+| Seed form state from parsed result | ✅ Done | |
 | **Phase E: Error Handling** | | |
-| Retry / fall back to manual dialog | ⏳ Pending | |
+| Retry / fall back to manual dialog | ✅ Done | Alert with Retake + Enter Manually |
 
 ### New Files Added (Phase 3)
 
@@ -214,15 +171,16 @@ app.json                        ← Added expo-camera plugin + CAMERA permission
 
 ---
 
-## Skills Learned (May 6, 2026)
+## Skills Learned (May 6–10, 2026)
 
 | Category | Skills |
 |---|---|
-| Camera & Media | expo-camera `CameraView`, camera permissions, capturing photos with `takePictureAsync()`, photo preview with `Image` |
-| Navigation | Expo Router modal navigation, passing data between screens via route params, `encodeURIComponent()` for safe URL encoding |
-| API Design | REST API integration planning, API key security (storing in app.json `extra`), evaluating OCR providers |
-| Debugging | `Camera.Constants` deprecation in expo-camera v14+, duplicate import conflicts, `router.back()` limitations |
-| Concepts | `===` strict equality, `await`/`async`, `useState` vs plain variable assignment, self-closing JSX tags |
+| Camera & Media | Integrated `expo-camera` (`CameraView`) into a React Native app; implemented camera permissions, live viewfinder, photo capture, and image preview with retake flow |
+| REST API Integration | Authenticated and called a third-party OCR API (Veryfi) via `fetch`; encoded image as base64 and handled structured JSON responses |
+| Security | Secured API credentials using `.env` + `app.config.js` + `expo-constants`; kept secrets out of source code and version control |
+| Data Parsing | Built a response normalizer with a category lookup table mapping raw vendor labels to app-defined categories; handled missing/null fields gracefully |
+| Navigation & State | Passed structured data between screens using `router.replace()` with `encodeURIComponent()` query params and `useLocalSearchParams()`; pre-filled form state from parsed API response |
+| Error Handling | Implemented `async`/`await` with `try/catch/finally`; user-facing Alert dialogs with graceful fallback to manual entry |
 
 ---
 

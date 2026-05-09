@@ -13,7 +13,8 @@ import IncomeExpenseToggle from "../../components/ui/Income_Expense_toggle";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { addTransaction, initDB } from "../../db/database"; //
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+// import { useSafeAreaFrame } from 'react-native-safe-area-context';
 // import { useRouter } from '@react-navigation/native';
 
 export default function AddTransaction() {
@@ -24,12 +25,20 @@ export default function AddTransaction() {
   const [type, setType] = useState("expense"); 
   const [showPicker, setShowPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState(new Date());
+  const { amount:scannedAmount, date: scannedDate, description: scannedDescription, category: scannedCategory } = useLocalSearchParams();
   const router = useRouter();
 
 
   useEffect(() => {
     initDB(); //
   }, []);
+
+  useEffect(() => {
+    if (scannedAmount) setAmount(scannedAmount);
+    if (scannedDate) setDate(scannedDate);
+    if (scannedDescription) setDescription(scannedDescription);
+    if (scannedCategory) setCategory(scannedCategory);
+  }, [scannedAmount, scannedDate, scannedDescription, scannedCategory]);
 
   function handleSubmit() {
     if (!date || !amount || !description || !category) {
