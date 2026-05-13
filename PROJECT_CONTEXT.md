@@ -184,6 +184,27 @@ app.json                        ← Added expo-camera plugin + CAMERA permission
 
 ---
 
+## Security Review (Future Phase)
+
+**Current rating: 6/10** — Safe for personal use. Not ready for public distribution.
+
+| Risk | Severity | Fix |
+|---|---|---|
+| Veryfi API keys baked into APK binary | Medium | Move to a backend proxy server that holds credentials server-side |
+| No app authentication | Medium | Add PIN or biometric lock (e.g. `expo-local-authentication`) |
+| SQLite database unencrypted on disk | Medium | Use encrypted SQLite (`expo-sqlite` with encryption or SQLCipher) |
+| CSV export has no access controls | Low | Scope export location, add share confirmation dialog |
+| Amount input accepts non-numeric values | Low | Validate and sanitize all form inputs before saving |
+
+**What's already good:**
+- `.env` is gitignored — credentials not in source control
+- EAS Secrets used for builds — not hardcoded in JS
+- Parameterized SQL queries — no SQL injection risk
+- Veryfi is SOC 2 certified and deletes receipt data after processing
+- All transaction data is local-only — nothing syncs without user action
+
+---
+
 ## Working Style
 - Step by step — one decision at a time
 - Explain the "why" before recommending anything
