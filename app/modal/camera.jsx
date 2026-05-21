@@ -5,6 +5,7 @@ import { ActivityIndicator, Alert, Animated, Image, StyleSheet, Text, TouchableO
 import { colors, spacing } from "../../constants/themes";
 import { parseVeryfiResponse } from '../../utils/parseVeryfiResponse';
 import { scanReceiptWithVeryfi } from '../../utils/veryfiService';
+import { VERYFI_CLIENT_ID } from '../../constants/veryfi';
 // ... other imports
 
 export default function CameraModal() {
@@ -18,6 +19,8 @@ export default function CameraModal() {
     const [isUploading, setIsUploading] = useState(false) // checks if the receipt has been uploaded to the veryfi system
 
     async function handleUsePhoto() {
+        // informs if the credentials are missing
+        Alert.alert("Debug", `Client ID: ${VERYFI_CLIENT_ID ? "present" : "MISSING"}`);
            setIsUploading(true)
 
            try {
@@ -36,19 +39,20 @@ console.log("Photo object:", JSON.stringify(photo));
             );
             
            } catch (error) {
-            console.log("Scan error:", error.message)
-            Alert.alert(
-                "Scan Failed",
-                "We couldn't read your receipt. Please retake the photo or enter details manually.",
-                [
-                    {text: "Enter Manually", onPress: () => {
-                        router.replace('/(tabs)/Add_Transaction')
-                    }},
-                    {text: "Retake", onPress: () => {
-                        setPhoto(null)
-                    }}
-                ]
-            )
+            // console.log("Scan error:", error.message)
+            // Alert.alert(
+            //     "Scan Failed",
+            //     "We couldn't read your receipt. Please retake the photo or enter details manually.",
+            //     [
+            //         {text: "Enter Manually", onPress: () => {
+            //             router.replace('/(tabs)/Add_Transaction')
+            //         }},
+            //         {text: "Retake", onPress: () => {
+            //             setPhoto(null)
+            //         }}
+            //     ]
+            // )
+            Alert.alert("Scan Failed", error.message || "Unknown error")
 
            } finally {
             setIsUploading(false);

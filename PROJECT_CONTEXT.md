@@ -35,8 +35,7 @@ Month Number | Date | Amount | Transaction Name | Category of Transaction
 ---
 
 ## Phased Roadmap
-
-| Phase              | Status           | Goal                                                                 |
+| Phase              | Status           | Goal                                     |
 |--------------------|-----------------|----------------------------------------------------------------------|
 | 1                  | ✅ Complete      | Manual entry → SQLite → transaction list view                        |
 | 1 (improvements)   | ✅ Complete      | Better date input, delete transaction                                |

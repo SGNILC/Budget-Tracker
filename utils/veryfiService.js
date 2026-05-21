@@ -13,6 +13,8 @@ import {
  * @returns {Promise<object>} - Raw Veryfi JSON response
  */
 export async function scanReceiptWithVeryfi(photoUri) {
+  // checks if the credentials are arriving
+  console.log("Credentials check:", VERYFI_CLIENT_ID ? "present" : "MISSING");
   // Convert the image to base64 so it can be sent in the request body
   const base64 = await readAsStringAsync(photoUri, {
     encoding:  EncodingType.Base64,

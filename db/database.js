@@ -31,7 +31,10 @@ export function getTransactions() {
     return db.getAllSync(
         `SELECT * 
          FROM transactions
-         ORDER BY date DESC`
+         ORDER BY date DESC, id DESC
+         
+         `
+
     )
 }
 
