@@ -24,8 +24,10 @@ A local-first mobile app that:
 | Single table | `transactions` with `type` column | Cleaner than two tables; `type` = `'expense'` or `'income'` |
 | Date format | TEXT as `YYYY-MM-DD` | Enables text-based `ORDER BY date DESC` sorting |
 | SQL params | `?` placeholders | Prevents SQL injection |
-| List refresh | `useFocusEffect` | Runs every time the tab is focused, unlike `useEffect` which only runs once on mount |
-| Cloud sync | Future phase | Solve local problem first, extend later |
+| Form Inputs | `@react-native-picker/picker`, `onSubmitEditing`, `returnKeyType` | Allows Categories to have a dropdown menu. Auto-advance between inputs smoothly without dismissing keyboard. |
+| Schema Migrations | Safe `ALTER TABLE` inside `try/catch` | Adding new columns like `category` and `type` to an existing SQLite table safely without dropping user data. |
+| Cloud Updates | `expo-updates` (`eas update`) | Skipping full rebuilds for simple JS/UI changes. |
+| EAS CLI Windows | `npx eas-cli` | Bypass Windows Execution Policy errors directly. |
 
 ---
 
@@ -80,10 +82,12 @@ export function initDB() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL,
         amount REAL NOT NULL,
-        description TEXT NOT NULL,
-        category TEXT NOT NULL,
-        type TEXT NOT NULL
+        description TEXT NOT NULL
     )`);
+
+    // Safe migrations for new columns
+    try { db.execSync(`ALTER TABLE transactions ADD COLUMN category TEXT DEFAULT 'Other' NOT NULL`); } catch (e) {}
+    try { db.execSync(`ALTER TABLE transactions ADD COLUMN type TEXT DEFAULT 'expense' NOT NULL`); } catch (e) {}
 }
 
 export function addTransaction(date, amount, description, category, type) {

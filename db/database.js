@@ -59,6 +59,46 @@ export function getTransactionsByRange(fromYYYYMM, toYYYYMM) {
     );
 }
 
+// Returns expense totals grouped by category for dashboard pie chart
+export function getExpenseTotalsByCategory() {
+    return db.getAllSync(
+        `SELECT COALESCE(NULLIF(category, ''), 'Other') AS category,
+                ROUND(SUM(amount), 2) AS total
+         FROM transactions
+         WHERE type = 'expense'
+         GROUP BY COALESCE(NULLIF(category, ''), 'Other')
+         ORDER BY total DESC`
+    );
+}
+
+// Returns income totals grouped by category for dashboard
+export function getIncomeTotalsByCategory() {
+    return db.getAllSync(
+        `SELECT COALESCE(NULLIF(category, ''), 'Other') AS category,
+                ROUND(SUM(amount), 2) AS total
+         FROM transactions
+         WHERE type = 'income'
+         GROUP BY COALESCE(NULLIF(category, ''), 'Other')
+         ORDER BY total DESC`
+    );
+}
+
+// Returns total sum of all expenses
+export function getTotalExpenses() {
+    const result = db.getAllSync(
+        `SELECT ROUND(SUM(amount), 2) AS total FROM transactions WHERE type = 'expense'`
+    );
+    return result[0]?.total || 0;
+}
+
+// Returns total sum of all income
+export function getTotalIncome() {
+    const result = db.getAllSync(
+        `SELECT ROUND(SUM(amount), 2) AS total FROM transactions WHERE type = 'income'`
+    );
+    return result[0]?.total || 0;
+}
+
 // Deleting a transaction form transaction list
 export function deleteTransaction(id) {
     db.runSync(`
