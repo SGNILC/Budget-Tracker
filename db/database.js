@@ -10,11 +10,22 @@ export function initDB() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date TEXT NOT NULL,
             amount REAL NOT NULL,
-            description TEXT NOT NULL,
-            category TEXT NOT NULL,
-            type TEXT NOT NULL
+            description TEXT NOT NULL
         )`
     );
+
+    // Safe migrations to add new columns without losing data
+    try {
+        db.execSync(`ALTER TABLE transactions ADD COLUMN category TEXT DEFAULT 'Other' NOT NULL`);
+    } catch (e) {
+        // Ignored if column already exists
+    }
+
+    try {
+        db.execSync(`ALTER TABLE transactions ADD COLUMN type TEXT DEFAULT 'expense' NOT NULL`);
+    } catch (e) {
+        // Ignored if column already exists
+    }
 }
 
 // Inserts a transaction into the table 

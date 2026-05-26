@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useEffect, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
   ScrollView,
   StatusBar,
@@ -13,7 +15,6 @@ import IncomeExpenseToggle from "../../components/ui/Income_Expense_toggle";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { addTransaction, initDB } from "../../db/database"; //
-import { useRouter, useLocalSearchParams } from "expo-router";
 // import { useSafeAreaFrame } from 'react-native-safe-area-context';
 // import { useRouter } from '@react-navigation/native';
 
@@ -26,6 +27,11 @@ export default function AddTransaction() {
   const [showPicker, setShowPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState(new Date());
   const { amount:scannedAmount, date: scannedDate, description: scannedDescription, category: scannedCategory } = useLocalSearchParams();
+
+  const amountRef = useRef(null);
+  const descriptionRef = useRef(null);
+
+  const CATEGORIES = ["Food","Rent", "Utilities", "Home","Travel", "Healthcare", "Other"].sort();
   const router = useRouter();
 
 
@@ -87,21 +93,35 @@ export default function AddTransaction() {
       {/* Input Fields */}
       <View style={styles.form}>
         <Input
+          ref={amountRef}
           placeholder="Amount"
           value={amount}
           onChangeText={setAmount}
           keyboardType="decimal-pad"
+          returnKeyType="next"
+          onSubmitEditing={() => descriptionRef.current?.focus()}
+          blurOnSubmit={false}
         />
         <Input
+          ref={descriptionRef}
           placeholder="Description"
           value={description}
           onChangeText={setDescription}
+          returnKeyType="done"
         />
-        <Input
-          placeholder="Category"
-          value={category}
-          onChangeText={setCategory}
-        />
+        <View style={styles.pickerWrapper}>
+          <Picker
+            selectedValue={category}
+            onValueChange={(val) => setCategory(val)}
+            style={[styles.picker, { color: category ? "black" : "#999" }]}
+            dropdownIconColor="black"
+          >
+            <Picker.Item label="Select a category" value="" color="#999" />
+            {CATEGORIES.map((cat) => (
+              <Picker.Item key={cat} label={cat} value={cat} />
+            ))}
+          </Picker>
+        </View>
         <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
           <Text style={{ color: date ? 'black' : '#999' }}>
             {date || 'YYYY-MM-DD'}
@@ -206,6 +226,17 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: 12,
+  },
+  pickerWrapper: {
+    backgroundColor: "#F1FFF8",
+    borderRadius: 15,
+    overflow: "hidden",
+    height: 60, // Approximate height of the Input fields with padding
+    justifyContent: "center",
+    paddingHorizontal: 11, // Helps push the inner picker to align with 18px padding of inputs
+  },
+  picker: {
+    // We handle text color dynamically inline now
   },
   input: {
     backgroundColor: "#F1FFF8",

@@ -1,16 +1,19 @@
+import { forwardRef } from "react";
 import { StyleSheet, TextInput } from "react-native";
 import { colors, fontSizes, spacing } from "../../constants/themes";
 
-export default function Input(props) {
+const Input = forwardRef(function Input(props, ref) {
   return (
     <TextInput
+      ref={ref}
       style={[styles.input, props.style]}
-      // Using the gray from our theme for consistency
-      placeholderTextColor={colors.gray} 
+      placeholderTextColor={colors.gray}
       {...props}
     />
   );
-}
+});
+
+export default Input;
 
 const styles = StyleSheet.create({
   input: {
