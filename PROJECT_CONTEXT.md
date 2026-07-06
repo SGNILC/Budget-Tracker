@@ -37,18 +37,67 @@ Month Number | Date | Amount | Transaction Name | Category of Transaction
 ---
 
 ## Phased Roadmap
-| Phase              | Status           | Goal                                     |
-|--------------------|-----------------|----------------------------------------------------------------------|
-| 1                  | ✅ Complete      | Manual entry → SQLite → transaction list view                        |
-| 1 (improvements)   | ✅ Complete      | Better date input, delete transaction                                |
-| 2                  | ✅ Complete      | Export to CSV (Excel-compatible) via Settings                        |
-| 2.5                | ✅ Complete      | UI polish — reusable components (Button, Card, Input, I_E toggle), centralized theme, refactored screens |
-| 3                  | 🔄 In Progress   | Camera → OCR (Veryfi) → parse receipt → pre-fill Add Transaction form |
-| 4                  | Not started      | Dashboard with charts and category breakdowns                        |
-| 5                  | Not started      | Backup + optional sync to laptop                                     |
+| Phase | Status | Goal |
+|----|----|----|
+| 1 | ✅ Complete | Manual entry → SQLite → transaction list view |
+| 1 (improvements) | ✅ Complete | Better date input, delete transaction |
+| 2 | ✅ Complete | Export to CSV (Excel-compatible) via Settings |
+| 2.5 | ✅ Complete | UI polish — reusable components (Button, Card, Input, I_E toggle), centralized theme, refactored screens |
+| 3 | 🔄 In Progress | Camera → OCR (Veryfi) → parse receipt → pre-fill Add Transaction form |
+| 3.1 | ✅ Complete | Safely migrate SQLite schema (add `category`, `type`). Add dropdown menus and advanced keyboard handling |
+| 4 | ✅ Complete | Dashboard with pie charts showing category spending breakdown and income/expense totals |
+| 5 | Planned | Multi-currency support: input currency per transaction + system-wide display currency with exchange rate conversion |
+| 6 | Not started | Backup + optional sync to laptop |
+| 7 | Future | Mini financial advisor: AI-powered insights on spending patterns (triggered on user request) |
 ---
 
-## Environment
+## Future Feature Architecture
+
+### Phase 5: Multi-Currency Support
+
+**Goal**: Allow users to:
+1. Enter transactions in **any currency** (JPY, KRW, CNY, USD, EUR, etc.)
+2. Set a **display currency** system-wide
+3. View all transactions converted to display currency automatically
+
+**Technical approach**:
+- Add `currency` column to `transactions` table (e.g., "JPY", "USD")
+- Add `display_currency` setting to Settings screen (default: "USD")
+- Integrate exchange rate API (e.g., Open Exchange Rates, Fixer.io, or free alpha.vantage.co)
+- On Dashboard and Transaction List, display amounts converted to user's display currency
+- Store exchange rates locally to avoid API calls on every screen load
+- Show original currency badge next to converted amount (e.g., "$150 USD (¥16,500 JPY)")
+
+**Key decisions**:
+- Exchange rates fetched **on Settings change**, not on every render (performance)
+- Rates cached locally with timestamp to detect staleness
+- Dashboard pie chart uses **converted amounts** for category breakdown
+- CSV export includes both original and converted amounts for audit trail
+
+---
+
+### Phase 7: AI-Powered Financial Advisor
+
+**Goal**: Provide personalized spending insights and recommendations.
+
+**Features** (triggered on-demand, not automatic):
+- "Analyze my spending" button in Settings
+- Uses LLM (OpenAI/Claude API) to analyze:
+  - Which categories are growing fastest
+  - Spending patterns (daily/weekly/monthly trends)
+  - Comparison to previous periods
+  - Actionable recommendations for budget optimization
+- Returns insights like: "Your food spending increased 30% this month. Consider meal planning."
+- Respects on-device data — only sends aggregated stats to API, not individual transactions
+
+**Technical approach**:
+- Create backend service or edge function (Vercel/Netlify) as intermediary
+- App sends: `{ period, categories, totals, userPreferences }`
+- API returns: `{ insights: [...], recommendations: [...] }`
+- Cache advice for 24 hours to reduce API calls
+- User can opt-in/out of this feature in Settings
+
+---
 - Node: v24.0.1
 - npm: 11.8.0
 - Expo Go installed on Android phone
