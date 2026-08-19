@@ -81,10 +81,9 @@ constants/
   npm run lint
   ```
 
-## Recruiter-focused highlights
+## Highlights
 
-- Built and evolved a production-style mobile architecture from scaffold to feature-rich app
-- Implemented local persistence, safe schema evolution, and parameterized SQL operations
-- Integrated third-party OCR workflow with defensive parsing and fallback UX
-- Delivered reusable UI primitives and multi-screen navigation structure
-- Prioritized practical security hygiene by keeping API credentials out of source control
+- Implements local persistence, safe schema evolution, and parameterized SQL operations
+- Integrates third-party OCR workflow with defensive parsing and fallback UX
+- Delivers reusable UI primitives and multi-screen navigation structure
+- Prioritizes practical security hygiene by keeping API credentials out of source control
