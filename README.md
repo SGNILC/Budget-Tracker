@@ -87,3 +87,7 @@ constants/
 - Integrates third-party OCR workflow with defensive parsing and fallback UX
 - Delivers reusable UI primitives and multi-screen navigation structure
 - Prioritizes practical security hygiene by keeping API credentials out of source control
+
+- ---
+
+*Built by Steeve G. Nsangou. AI tools (Claude) were used for assistance during development.*
