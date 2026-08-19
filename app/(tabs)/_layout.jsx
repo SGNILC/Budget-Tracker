@@ -84,14 +84,6 @@ export default function TabLayout() {
           ),
         }}
       />
-
-      <Tabs.Screen
-      name="../modal/camera"  
-      options={{
-        href: null,  
-        headerShown: false,
-      }}
-    />
     </Tabs>
     
   );

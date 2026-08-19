@@ -1,50 +1,90 @@
-# Welcome to your Expo app 👋
+# Budget Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A local-first React Native app for tracking income and expenses, scanning receipts, and exporting records for spreadsheet workflows.
 
-## Get started
+## Why this project exists
 
-1. Install dependencies
+Budget data was previously managed in spreadsheets and proved fragile over time. This app was built to keep financial data available on-device, reduce manual entry with OCR, and support practical export needs.
 
+## Core features
+
+- Add and categorize income/expense transactions
+- View transaction history with fast local retrieval
+- Dashboard with total income, total expenses, and expense category breakdown
+- Receipt capture + OCR pre-fill flow (Veryfi integration)
+- CSV export for selected date ranges
+
+## Tech stack
+
+- **Mobile:** React Native + Expo Router
+- **Storage:** `expo-sqlite` (local SQLite)
+- **Visualization:** `react-native-chart-kit`
+- **Receipt OCR:** Veryfi API
+- **File sharing/export:** `expo-file-system`, `expo-sharing`
+
+## Architecture
+
+High-level architecture and data flow are documented in **`/home/runner/work/Budget-Tracker/Budget-Tracker/ARCHITECTURE.md`**.
+
+## Project structure
+
+```text
+app/
+  (tabs)/
+    Add_Transaction.jsx
+    Transaction_List.jsx
+    Dashboard.jsx
+    Settings.jsx
+  Settings/
+    Export.jsx
+    Profile.jsx
+    Currency.jsx
+  modal/
+    camera.jsx
+components/ui/
+  Input.js
+  button.js
+  Card.js
+  Income_Expense_toggle.js
+db/
+  database.js
+utils/
+  veryfiService.js
+  parseVeryfiResponse.js
+constants/
+  themes.js
+  veryfi.js
+```
+
+## Local setup
+
+1. Install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+2. Provide OCR credentials in `.env`:
    ```bash
-   npx expo start
+   VERYFI_CLIENT_ID=...
+   VERYFI_CLIENT_SECRET=...
+   VERYFI_USERNAME=...
+   VERYFI_API_KEY=...
+   ```
+3. Start the app:
+   ```bash
+   npm run start
    ```
 
-In the output, you'll find options to open the app in a
+## Validation
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Lint:
+  ```bash
+  npm run lint
+  ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Recruiter-focused highlights
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- Built and evolved a production-style mobile architecture from scaffold to feature-rich app
+- Implemented local persistence, safe schema evolution, and parameterized SQL operations
+- Integrated third-party OCR workflow with defensive parsing and fallback UX
+- Delivered reusable UI primitives and multi-screen navigation structure
+- Prioritized practical security hygiene by keeping API credentials out of source control
