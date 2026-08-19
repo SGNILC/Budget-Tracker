@@ -22,8 +22,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.shojilab2025.budgettracker",
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.CAMERA"
       ]
     },
     "web": {
@@ -59,10 +58,6 @@
       "reactCompiler": true
     },
     "extra": {
-      "veryfiClientId": "vrfAvdvk1BVRaMIYADzPc9HiZYrRCm9CBOh8GGN",
-      "veryfiClientSecret": "yTlyDCJ2btfLSbbVLHN1ztB1R4mWMKpULKoO55APSN1002DRCMCPDydYOdCEN8eXm3vdlDKo1gWMoEBoyaLe1S5RR9Lw5wpZLAXEKOS8E0nxSCHUw9zYTCtKKidlloyf",
-      "veryfiUsername": "steevensangou",
-      "veryfiApiKey": "3ec4313f2991b9d3f9b7d3c738cc31f7",
       "router": {},
       "eas": {
         "projectId": "d643b30b-6c39-4a58-84bb-6f4b7f5b4764"

@@ -5,8 +5,6 @@ import { ActivityIndicator, Alert, Animated, Image, StyleSheet, Text, TouchableO
 import { colors, spacing } from "../../constants/themes";
 import { parseVeryfiResponse } from '../../utils/parseVeryfiResponse';
 import { scanReceiptWithVeryfi } from '../../utils/veryfiService';
-import { VERYFI_CLIENT_ID } from '../../constants/veryfi';
-// ... other imports
 
 export default function CameraModal() {
     const [hasPermission, setHasPermission] = useState(null);
@@ -19,40 +17,33 @@ export default function CameraModal() {
     const [isUploading, setIsUploading] = useState(false) // checks if the receipt has been uploaded to the veryfi system
 
     async function handleUsePhoto() {
-        // informs if the credentials are missing
-        Alert.alert("Debug", `Client ID: ${VERYFI_CLIENT_ID ? "present" : "MISSING"}`);
            setIsUploading(true)
 
            try {
-            // const result = await scanReceiptWithVeryfi(photo.uri);
-            // const parsedResults =  parseVeryfiResponse(result);
-            // if (!parsedResults) throw new Error('Could not read receipt. Please try again or enter manually.');
-console.log("Photo object:", JSON.stringify(photo));
-            console.log("Step 1: starting scan...");
-    const result = await scanReceiptWithVeryfi(photo.uri);
-    console.log("Step 2: Veryfi response:", JSON.stringify(result));
-    const parsedResults = parseVeryfiResponse(result);
-    console.log("Step 3: parsed:", JSON.stringify(parsedResults));
-    if (!parsedResults) throw new Error("Could not parse receipt");
+            const result = await scanReceiptWithVeryfi(photo.uri);
+            const parsedResults = parseVeryfiResponse(result);
+            if (!parsedResults) {
+                throw new Error("Could not read receipt. Please retake the photo or enter details manually.");
+            }
              router.replace(
                 `/(tabs)/Add_Transaction?amount=${encodeURIComponent(parsedResults.amount)}&date=${encodeURIComponent(parsedResults.date)}&description=${encodeURIComponent(parsedResults.description)}&category=${encodeURIComponent(parsedResults.category)}`
             );
             
            } catch (error) {
-            // console.log("Scan error:", error.message)
-            // Alert.alert(
-            //     "Scan Failed",
-            //     "We couldn't read your receipt. Please retake the photo or enter details manually.",
-            //     [
-            //         {text: "Enter Manually", onPress: () => {
-            //             router.replace('/(tabs)/Add_Transaction')
-            //         }},
-            //         {text: "Retake", onPress: () => {
-            //             setPhoto(null)
-            //         }}
-            //     ]
-            // )
-            Alert.alert("Scan Failed", error.message || "Unknown error")
+            Alert.alert(
+                "Scan Failed",
+                error.message || "We couldn't read your receipt.",
+                [
+                    {
+                        text: "Enter Manually",
+                        onPress: () => router.replace('/(tabs)/Add_Transaction'),
+                    },
+                    {
+                        text: "Retake",
+                        onPress: () => setPhoto(null),
+                    },
+                ],
+            );
 
            } finally {
             setIsUploading(false);
@@ -75,7 +66,7 @@ console.log("Photo object:", JSON.stringify(photo));
         // Delay the title appearance slightly so it feels smoother after the slide-up
         const timer = setTimeout(() => setShowTitle(true), 400);
         return () => clearTimeout(timer);
-    }, []);
+    }, [fadeAnim]);
 
     if (hasPermission === null) {
         return <View style={styles.center}><ActivityIndicator size="large" color={colors.white} /></View>;
